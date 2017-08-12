@@ -303,7 +303,7 @@ int main() {
 									double other_car_s = sensor_fusion[i][5];
 									double other_car_future_s = other_car_s + prev_size * 0.02 * other_car_speed_mps;
 
-									if ((other_car_future_s > car_s) && (other_car_future_s - car_s < 20)) {
+									if ((other_car_future_s > car_s) && (other_car_future_s - car_s < 30)) {
 //								cout << "car ahead. id: " << other_car_id << " s " << other_car_s << " speed " << other_car_speed_mps << endl;
 //								cout << "our s: " << car_s << endl;
 										too_close = true;
@@ -333,7 +333,7 @@ int main() {
 
 
               // check if car in in front of us in our lane
-							if (other_car_lane == car_lane && (other_car_future_s > car_s) && (other_car_future_s - car_s < 20)) {
+							if (other_car_lane == car_lane && (other_car_future_s > car_s) && (other_car_future_s - car_s < 30)) {
 //								cout << "car ahead. id: " << other_car_id << " s " << other_car_s << " speed " << other_car_speed_mps << endl;
 //								cout << "our s: " << car_s << endl;
 								lane_cost[other_car_lane] += 1;
@@ -341,13 +341,13 @@ int main() {
 							}
 							else if (other_car_lane != car_lane ) {
                 // check if car is in other lane but near us blocking the lane
-								if (abs(other_car_s - car_s) < 20) {
+								if (abs(other_car_s - car_s) < 30) {
 //									cout << "near us. id: " << other_car_id << " s " << other_car_s << " lane " << other_car_lane << endl;
 //									cout << " our s: " << car_s << endl;
 									lane_cost[other_car_lane] += 1;
 								}
                 // check if car in other lane is behind us but close enough and faster than us
-								else if (other_car_s < car_s && other_car_s + 40 > car_s && other_car_speed_mps > ref_vel) {
+								else if (other_car_s < car_s && other_car_s + 60 > car_s && other_car_speed_mps > ref_vel) {
 //								cout << "overtaking us. id: " << other_car_id << " s " << other_car_s << " speed " << other_car_speed_mps << " lane " << other_car_lane << endl;
 //								cout << "our s: " << car_s << endl;
 									lane_cost[other_car_lane] += 1;
