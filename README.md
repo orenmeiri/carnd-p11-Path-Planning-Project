@@ -26,7 +26,7 @@ Most of the time, the ego car follows current lane and curvature of the road.  T
 * When not switching lane, these 5 points should be in middle of current ego car lane and all points along the spline line should smoothly follow the road curvature.
 * Trajectory points to send to simulator are calculated from _ref___vel_ at 0.02 seconds intervals on the spline line.
 
-### choose a lane
+## Choose a lane
 
 In order to avoid collisions and perform safe lane switches, sensor_fusion data is analysed.  I evaulate each lane by cost by parsing all other cars on the road around us, adding 1 per obstacle detected the the lane cost.  Obstacles can be:
 
@@ -41,6 +41,16 @@ If no better adjacent lane is found but we are getting close to car ahead, we sl
 An added optimization: If no obstacles is in the middle lane (the preferred lane), we switch to it.  This is for getting ready to have more options (left and right) in future.
 
 
-### switch lane
+## Switch lane
 
 As described above lane costs are calculated and at times, lane switch is best course of action. In such a case, the future 3 pointes (for spline) are marked at future s positions but for the target lane (not current lane).  This produces target trajectory that smoothly leads to the target lane.
+
+## State machine
+
+A very simple state machine is maintained with 2 states:
+
+* stay in lane - following current lane
+* lane change - transitioning to new lane.
+
+
+The lane change state is used to allow safe completion of lane change before re-evaulating nearby traffic.  Without this, it is hard to determine which lane the ego car is currently at.  During lane change state, we only monitor for colliding with slow car ahead.  In stay in lane state, we monitor all lanes for making choice about continuing with current lane or lane switch is better.
