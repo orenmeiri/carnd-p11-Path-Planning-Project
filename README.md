@@ -1,5 +1,5 @@
 
-# Reflection on how to generate paths.
+# Path Planning
 
 The following describes methods and techniques used for the path planning exercise:
 
@@ -20,8 +20,8 @@ At each step (0.02 seconds) _ref___vel_ is changed a max of 0.112 meters per sec
 
 Most of the time, the ego car follows current lane and curvature of the road.  This is done by following steps:
 
-* prepare 5 points for fiting smooth line through them with spline library.  These 5 points are in x,y map coodinates system.  When needed points are converted from x,y car coordinate system and s,d coordinate system.
-* first 2 points are current car trajectory.  This can be actual current ego car position and 1 extrapolated previous position based on current car heading OR last 2 points in already planned trajectory.
+* prepare 5 points for fiting smooth line through them with spline library.  These 5 points are in x,y map coodinates system.  When needed points are converted from car based cartesian coordinate system and Fernet coordinate system.
+* first 2 points are current car trajectory.  This can be the actual current ego car position and 1 extrapolated previous position based on current car heading OR last 2 points in already planned trajectory.
 * 3 more points are calculated ahead of us in the current ego car lane.
 * When not switching lane, these 5 points should be in middle of current ego car lane and all points along the spline line should smoothly follow the road curvature.
 * Trajectory points to send to simulator are calculated from _ref___vel_ at 0.02 seconds intervals on the spline line.
@@ -32,11 +32,11 @@ In order to avoid collisions and perform safe lane switches, sensor_fusion data 
 
 * car is ahead of us and near in our lane
 * car is in other lane near us (close s value)
-* car is in other lane, behind us in s but faster than us (i.e. overtaking us).
+* car is in other lane, behind us in s but faster than ego car (i.e. overtaking the ego car).
 
 Once evaulated, each adjacent lane is checked if it has lower cost.  If so, we perform lane change, preferring legal left lane overtaking.
 
-If no better adjacent lane is found but we are getting close to car ahead, we slow down a little bit.
+If no better adjacent lane is found but ego car is getting close to car ahead, we slow down a little bit.
 
 An added optimization: If no obstacles is in the middle lane (the preferred lane), we switch to it.  This is for getting ready to have more options (left and right) in future.
 
@@ -54,3 +54,8 @@ A very simple state machine is maintained with 2 states:
 
 
 The lane change state is used to allow safe completion of lane change before re-evaulating nearby traffic.  Without this, it is hard to determine which lane the ego car is currently at.  During lane change state, we only monitor for colliding with slow car ahead.  In stay in lane state, we monitor all lanes for making choice about continuing with current lane or lane switch is better.
+
+## Example trial run
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/FlhYRkEtgq8/0.jpg)](http://www.youtube.com/watch?v=FlhYRkEtgq8 "Path Planning project")
+
